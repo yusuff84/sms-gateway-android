@@ -9,7 +9,7 @@ class PreferencesManager(context: Context) {
         context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
     var serverUrl: String
-        get() = prefs.getString(KEY_SERVER_URL, "ws://10.0.2.2:8088") ?: "ws://10.0.2.2:8088"
+        get() = prefs.getString(KEY_SERVER_URL, "wss://sms.loca-li.com") ?: "wss://sms.loca-li.com"
         set(value) = prefs.edit().putString(KEY_SERVER_URL, value.trim()).apply()
 
     var deviceToken: String

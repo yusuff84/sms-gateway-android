@@ -8,7 +8,7 @@
     <string name="status_error">Ошибка связи</string>
     <string name="btn_start">Запустить шлюз</string>
     <string name="btn_stop">Остановить шлюз</string>
-    <string name="server_url_hint">URL бэкенда (ws://...)</string>
+    <string name="server_url_hint">URL бэкенда (wss://sms.loca-li.com)</string>
     <string name="device_token_hint">Токен устройства из админки</string>
     <string name="notification_channel_name">Служба SMS Шлюза</string>
     <string name="notification_channel_desc">Фоновая отправка SMS сообщений</string>
