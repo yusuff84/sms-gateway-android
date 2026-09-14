@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Google Material 3 (Material You) Palette -->
+    <color name="md_theme_primary">#0B57D0</color>
+    <color name="md_theme_onPrimary">#FFFFFF</color>
+    <color name="md_theme_primaryContainer">#D3E3FD</color>
+    <color name="md_theme_onPrimaryContainer">#041E49</color>
+
+    <color name="md_theme_secondary">#535F70</color>
+    <color name="md_theme_onSecondary">#FFFFFF</color>
+    <color name="md_theme_secondaryContainer">#D7E3F8</color>
+    <color name="md_theme_onSecondaryContainer">#101C2B</color>
+
+    <color name="md_theme_surface">#F8F9FA</color>
+    <color name="md_theme_onSurface">#1F1F1F</color>
+    <color name="md_theme_surfaceVariant">#E1E3E1</color>
+    <color name="md_theme_onSurfaceVariant">#444746</color>
+    <color name="md_theme_surfaceContainer">#EDF2FA</color>
+    <color name="md_theme_surfaceContainerHigh">#E2E7EF</color>
+
+    <color name="md_theme_outline">#747775</color>
+    <color name="md_theme_outlineVariant">#C4C7C5</color>
+
+    <!-- Semantic Status Colors (Soft Pills) -->
+    <color name="status_connected_bg">#C4EED0</color>
+    <color name="status_connected_text">#07522C</color>
+
+    <color name="status_connecting_bg">#FFE7B3</color>
+    <color name="status_connecting_text">#7C4A00</color>
+
+    <color name="status_disconnected_bg">#E3E3E3</color>
+    <color name="status_disconnected_text">#444746</color>
+
+    <color name="status_error_bg">#F9DEDC</color>
+    <color name="status_error_text">#8C1D18</color>
+
+    <!-- Delivery Status Pill Colors -->
+    <color name="delivered_bg">#C4EED0</color>
+    <color name="delivered_text">#07522C</color>
+
+    <color name="sent_bg">#D3E3FD</color>
+    <color name="sent_text">#041E49</color>
+
+    <color name="queued_bg">#FFE7B3</color>
+    <color name="queued_text">#7C4A00</color>
+
+    <color name="failed_bg">#F9DEDC</color>
+    <color name="failed_text">#8C1D18</color>
+</resources>

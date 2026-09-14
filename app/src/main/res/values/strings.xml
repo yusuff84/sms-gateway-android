@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">SMS Gateway Pro</string>
+    <string name="service_running">Шлюз SMS активен</string>
+    <string name="service_description">Прием и отправка сообщений с сервера в реальном времени</string>
+    <string name="status_connected">Подключен</string>
+    <string name="status_connecting">Подключение...</string>
+    <string name="status_disconnected">Отключен</string>
+    <string name="status_error">Ошибка связи</string>
+    <string name="btn_start">Запустить шлюз</string>
+    <string name="btn_stop">Остановить шлюз</string>
+    <string name="server_url_hint">URL бэкенда (ws://...)</string>
+    <string name="device_token_hint">Токен устройства из админки</string>
+    <string name="notification_channel_name">Служба SMS Шлюза</string>
+    <string name="notification_channel_desc">Фоновая отправка SMS сообщений</string>
+    <string name="clear_logs_btn">Очистить</string>
+    <string name="permission_required">Для работы требуются разрешения на отправку SMS и телефон.</string>
+
+    <!-- MD3 Metrics & Rotation Strings -->
+    <string name="stat_sent_title">Отправлено</string>
+    <string name="stat_delivered_title">Доставлено</string>
+    <string name="stat_sim_title">SIM Слот</string>
+    <string name="sim_auto_rotate">Авто-ротация SIM</string>
+    <string name="sim_slot_1">Только SIM 1</string>
+    <string name="sim_slot_2">Только SIM 2</string>
+    <string name="logs_header">Журнал отправки SMS</string>
+    <string name="battery_label">Батарея: %1$d%%</string>
+</resources>
