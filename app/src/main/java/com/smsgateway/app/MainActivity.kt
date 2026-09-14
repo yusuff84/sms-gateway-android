@@ -15,6 +15,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
+import android.telephony.SubscriptionManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -66,24 +67,31 @@ class MainActivity : AppCompatActivity() {
         binding.etServerUrl.setText(prefs.serverUrl)
         binding.etDeviceToken.setText(prefs.deviceToken)
 
-        // Setup SIM Mode Toggle
-        when (prefs.simMode) {
-            1 -> binding.toggleSimMode.check(R.id.btnSim1)
-            2 -> binding.toggleSimMode.check(R.id.btnSim2)
-            else -> binding.toggleSimMode.check(R.id.btnSimAuto)
-        }
+        // Setup SIM Mode Toggle: Check if phone actually has multiple SIM cards
+        val activeSimCount = getActiveSimCount()
+        if (activeSimCount <= 1) {
+            binding.toggleSimMode.visibility = android.view.View.GONE
+            binding.tvActiveSimLabel.text = "SIM 1"
+            prefs.simMode = 1
+        } else {
+            binding.toggleSimMode.visibility = android.view.View.VISIBLE
+            when (prefs.simMode) {
+                1 -> binding.toggleSimMode.check(R.id.btnSim1)
+                2 -> binding.toggleSimMode.check(R.id.btnSim2)
+                else -> binding.toggleSimMode.check(R.id.btnSimAuto)
+            }
+            updateSimModeLabel(prefs.simMode)
 
-        updateSimModeLabel(prefs.simMode)
-
-        binding.toggleSimMode.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            if (isChecked) {
-                val mode = when (checkedId) {
-                    R.id.btnSim1 -> 1
-                    R.id.btnSim2 -> 2
-                    else -> 0
+            binding.toggleSimMode.addOnButtonCheckedListener { _, checkedId, isChecked ->
+                if (isChecked) {
+                    val mode = when (checkedId) {
+                        R.id.btnSim1 -> 1
+                        R.id.btnSim2 -> 2
+                        else -> 0
+                    }
+                    prefs.simMode = mode
+                    updateSimModeLabel(mode)
                 }
-                prefs.simMode = mode
-                updateSimModeLabel(mode)
             }
         }
 
@@ -104,6 +112,20 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnClearLogs.setOnClickListener {
             GatewayEventBus.clearLogs()
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getActiveSimCount(): Int {
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                val subManager = getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as? SubscriptionManager
+                subManager?.activeSubscriptionInfoCount ?: 1
+            } else {
+                1
+            }
+        } catch (e: Exception) {
+            1
         }
     }
 

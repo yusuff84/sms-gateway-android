@@ -112,7 +112,7 @@ object SmsSender {
             }
         }
 
-        // Register receivers - MUST be RECEIVER_EXPORTED so system telephony process can deliver callback
+        // Register receivers
         val receiverFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Context.RECEIVER_EXPORTED
         } else {
@@ -173,44 +173,40 @@ object SmsSender {
         }
     }
 
-    private var lastRotatedSlotIndex = 0
-
     @SuppressLint("MissingPermission")
     private fun resolveSmsManager(context: Context, simSlot: Int): SmsManager {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            try {
-                val subManager = context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as? SubscriptionManager
-                val subList = subManager?.activeSubscriptionInfoList
-                if (!subList.isNullOrEmpty()) {
-                    val targetSlot = if (simSlot in 1..2) {
-                        simSlot - 1 // 0-based
-                    } else {
-                        // Auto-rotate between active SIMs
-                        lastRotatedSlotIndex = (lastRotatedSlotIndex + 1) % subList.size
-                        subList[lastRotatedSlotIndex].simSlotIndex
-                    }
-
-                    val targetInfo = subList.find { it.simSlotIndex == targetSlot } ?: subList.first()
-                    Log.i(TAG, "Routing via SIM ${targetInfo.simSlotIndex + 1} (${targetInfo.carrierName}, subId: ${targetInfo.subscriptionId})")
-                    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        val sm = context.getSystemService(SmsManager::class.java)
-                        sm.createForSubscriptionId(targetInfo.subscriptionId)
-                    } else {
-                        @Suppress("DEPRECATION")
-                        SmsManager.getSmsManagerForSubscriptionId(targetInfo.subscriptionId)
-                    }
-                }
-            } catch (e: Exception) {
-                Log.w(TAG, "Could not resolve specific SIM slot $simSlot, using default: ${e.message}")
-            }
-        }
-
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val defaultSmsManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             context.getSystemService(SmsManager::class.java)
         } else {
             @Suppress("DEPRECATION")
             SmsManager.getDefault()
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            try {
+                val subManager = context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE) as? SubscriptionManager
+                val subList = subManager?.activeSubscriptionInfoList
+
+                // If only 1 SIM exists, always use the default SMS manager directly!
+                if (!subList.isNullOrEmpty() && subList.size > 1 && simSlot == 2) {
+                    val targetInfo = subList.find { it.simSlotIndex == 1 }
+                    if (targetInfo != null) {
+                        Log.i(TAG, "Routing via SIM 2 (subId: ${targetInfo.subscriptionId})")
+                        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            context.getSystemService(SmsManager::class.java).createForSubscriptionId(targetInfo.subscriptionId)
+                        } else {
+                            @Suppress("DEPRECATION")
+                            SmsManager.getSmsManagerForSubscriptionId(targetInfo.subscriptionId)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Could not resolve specific SIM slot, using default: ${e.message}")
+            }
+        }
+
+        Log.i(TAG, "Using default active SIM card")
+        return defaultSmsManager
     }
 
     private fun getSmsErrorMessage(resultCode: Int): String {
